@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 import com.example.demo.controller.dto.AlumnoDto;
+import com.example.demo.exceptions.custom.ExisteAlumno;
+import com.example.demo.exceptions.custom.NoExisteAlumno;
 import com.example.demo.model.AlumnoEntity;
 import com.example.demo.model.EstadoAlumno;
 import com.example.demo.repository.AlumnoRepository;
@@ -67,7 +69,7 @@ class AlumnoServiceImplTest {
         when(alumnoRepository.existsByAlumnoId("A001")).thenReturn(Mono.just(true));
 
         StepVerifier.create(alumnoService.createAlumno(alumnoDto))
-                .expectErrorMatches(e -> e instanceof IllegalArgumentException &&
+                .expectErrorMatches(e -> e instanceof ExisteAlumno &&
                         e.getMessage().contains("ya está registrado"))
                 .verify();
     }
@@ -87,7 +89,7 @@ class AlumnoServiceImplTest {
         when(alumnoRepository.findByAlumnoId("A001")).thenReturn(Mono.empty());
 
         StepVerifier.create(alumnoService.updateAlumno("A001", alumnoDto))
-                .expectErrorMatches(e -> e instanceof IllegalArgumentException &&
+                .expectErrorMatches(e -> e instanceof NoExisteAlumno &&
                         e.getMessage().contains("no existe"))
                 .verify();
     }
@@ -95,23 +97,34 @@ class AlumnoServiceImplTest {
 
     @Test
     void deleteAlumno_shouldDeleteIfExists() {
+        // Simula un alumno existente con ID interno
+        AlumnoEntity alumnoEntity = new AlumnoEntity();
+        alumnoEntity.setId(1L);
+        alumnoEntity.setAlumnoId("A001");
+
+        // Mock del repositorio
         when(alumnoRepository.findByAlumnoId("A001")).thenReturn(Mono.just(alumnoEntity));
         when(alumnoRepository.deleteById(1L)).thenReturn(Mono.empty());
 
+        // Verifica que el flujo se completa sin errores
         StepVerifier.create(alumnoService.deleteAlumno("A001"))
                 .verifyComplete();
 
+        // Verifica que se llamó correctamente al método delete
         verify(alumnoRepository).deleteById(1L);
     }
+
 
     @Test
     void deleteAlumno_shouldFailIfNotFound() {
         when(alumnoRepository.findByAlumnoId("A001")).thenReturn(Mono.empty());
 
         StepVerifier.create(alumnoService.deleteAlumno("A001"))
-                .expectErrorMatches(e -> e instanceof IllegalArgumentException &&
-                        e.getMessage().contains("No existe el alumno"))
+                .expectErrorMatches(e -> e instanceof NoExisteAlumno &&
+                        e.getMessage().contains("No existe el alumno con código: A001"))
                 .verify();
+
+        verify(alumnoRepository, never()).deleteById(anyLong());
     }
 
     @Test

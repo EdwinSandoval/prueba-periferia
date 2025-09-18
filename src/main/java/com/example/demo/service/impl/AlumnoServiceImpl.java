@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.controller.dto.AlumnoDto;
+import com.example.demo.exceptions.custom.ExisteAlumno;
+import com.example.demo.exceptions.custom.NoExisteAlumno;
 import com.example.demo.model.AlumnoEntity;
 import com.example.demo.model.EstadoAlumno;
 import com.example.demo.repository.AlumnoRepository;
@@ -34,7 +36,7 @@ public class AlumnoServiceImpl implements AlumnoService {
         return alumnoRepository.existsByAlumnoId(dto.alumnoId())
                 .flatMap(existe -> {
                     if (existe) {
-                        return Mono.error(new IllegalArgumentException("El alumno con el ID " + dto.id() + " ya está registrado"));
+                        return Mono.error(new ExisteAlumno("El alumno con el ID " + dto.alumnoId() + " ya está registrado"));
                     }
 
                     AlumnoEntity entity = buildAlumnoEntity(dto, EstadoAlumno.ACTIVO);
@@ -45,7 +47,7 @@ public class AlumnoServiceImpl implements AlumnoService {
     @Override
     public Mono<AlumnoDto> updateAlumno(String alumnoId, AlumnoDto dto) {
         return getAlumno(alumnoId)
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("El alumno con ID " + alumnoId + " no existe")))
+                .switchIfEmpty(Mono.error(new NoExisteAlumno("El alumno con ID " + alumnoId + " no existe")))
                 .flatMap(alumnoExistente -> {
                     // Aquí usamos el ID interno para evitar el error de clave duplicada
                     AlumnoEntity entity = buildAlumnoEntity(dto, dto.estado());
@@ -57,8 +59,8 @@ public class AlumnoServiceImpl implements AlumnoService {
     @Override
     public Mono<Void> deleteAlumno(String alumnoId) {
         return alumnoRepository.findByAlumnoId(alumnoId)
-                .flatMap(alumno -> alumnoRepository.deleteById(alumno.getId()))
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("No existe el alumno con código: " + alumnoId)));
+                .switchIfEmpty(Mono.error(new NoExisteAlumno("No existe el alumno con código: " + alumnoId)))
+                .flatMap(alumno -> alumnoRepository.deleteById(alumno.getId()));
     }
 
     @Override
