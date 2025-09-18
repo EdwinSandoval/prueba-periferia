@@ -92,6 +92,7 @@ class AlumnoServiceImplTest {
                 .verify();
     }
 
+
     @Test
     void deleteAlumno_shouldDeleteIfExists() {
         when(alumnoRepository.findByAlumnoId("A001")).thenReturn(Mono.just(alumnoEntity));
@@ -124,10 +125,12 @@ class AlumnoServiceImplTest {
 
     @Test
     void getAlumnosActivos_shouldReturnOnlyActive() {
-        when(alumnoRepository.findByEstado("ACTIVO")).thenReturn(Flux.just(alumnoEntity));
+        // Simula que el repositorio devuelve alumnos con estado "ACTIVO"
+        when(alumnoRepository.findByEstado(EstadoAlumno.ACTIVO.getValor()))
+                .thenReturn(Flux.just(alumnoEntity));
 
         StepVerifier.create(alumnoService.getAlumnosActivos())
-                .expectNextMatches(dto -> dto.estado().equals(EstadoAlumno.ACTIVO.getValor()))
+                .expectNextMatches(dto -> dto.estado() == EstadoAlumno.ACTIVO)
                 .verifyComplete();
     }
 }
