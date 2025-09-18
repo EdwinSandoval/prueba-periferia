@@ -1,0 +1,151 @@
+{
+	"info": {
+		"_postman_id": "46e8db6c-c661-4234-929d-bdaa74d53ac4",
+		"name": "prueba-periferia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20894673",
+		"_collection_link": "https://grey-sunset-35373.postman.co/workspace/Team-Workspace~3ad62ab4-da43-4e05-8d8e-ee1a1322e00e/collection/20894673-46e8db6c-c661-4234-929d-bdaa74d53ac4?action=share&source=collection_link&creator=20894673"
+	},
+	"item": [
+		{
+			"name": "alumnos",
+			"item": [
+				{
+					"name": "listarAlumnos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/alumno/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"alumno",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listarAl_Activos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/alumno/activos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"alumno",
+								"activos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtenerAlumnoId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/alumno/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"alumno",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "guardarAlumno",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"alumnoId\": \"A004\",\r\n  \"nombre\": \"LEONEL hyhyhy\",\r\n  \"apellido\": \"SANDOVAL\",\r\n  \"edad\": 21\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/alumno",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"alumno"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "actualizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"alumnoId\": \"A002\",\r\n  \"nombre\": \"ANA Lucía\",\r\n  \"apellido\": \"Ramírez\",\r\n  \"estado\":\"INACTIVO\",\r\n  \"edad\": 21\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/alumno/A002",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"alumno",
+								"A002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "eliminar",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/alumno/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"alumno",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
